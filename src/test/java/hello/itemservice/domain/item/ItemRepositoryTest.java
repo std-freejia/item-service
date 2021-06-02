@@ -60,7 +60,7 @@ public class ItemRepositoryTest {
         //then
         Item findItem = itemRepository.findById(itemId); // 아이디로 조회하여
 
-        // 파라미터로 수정이 제대로 됬는지 확인  
+        // 파라미터로 수정이 제대로 됬는지 확인
         assertThat(findItem.getItemName()).isEqualTo(updateParam.getItemName());
         assertThat(findItem.getPrice()).isEqualTo(updateParam.getPrice());
         assertThat(findItem.getQuantity()).isEqualTo(updateParam.getQuantity());
