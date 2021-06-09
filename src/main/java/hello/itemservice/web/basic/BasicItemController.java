@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.PostConstruct;
@@ -38,4 +39,20 @@ public class BasicItemController {
         itemRepository.save(new Item("itemA", 10000, 10));
         itemRepository.save(new Item("itemB", 20000, 20));
     }
+
+    // 상품 상세
+    @GetMapping("/{itemId}")
+    public String item(@PathVariable Long itemId, Model model){ // @PathVariable == {itemId}
+        Item item = itemRepository.findById(itemId); // itemId로 레포지토리에서 item 조회
+        model.addAttribute("item", item); // 뷰에 랜더링할 모델에 item 객체 담기
+        return "basic/item"; // 뷰 템플릿 호출
+    }
+
+    // 상품 수정
+    @GetMapping("/add")
+    public String addForm(){
+        return "basic/addForm"; // 수정 뷰 호출
+    }
+
+
 }
