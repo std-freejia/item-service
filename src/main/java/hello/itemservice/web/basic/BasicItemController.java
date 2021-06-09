@@ -101,4 +101,19 @@ public class BasicItemController {
         return "basic/item";
     }
 
+    // 수정 화면 GET : 수정 화면에 기존 정보만 뿌려준다.
+    @GetMapping("/{itemId}/edit")
+    public String editFrom(@PathVariable Long itemId, Model model){
+        Item item = itemRepository.findById(itemId);
+        model.addAttribute("item", item);
+        return "basic/editForm";
+    }
+
+    // 수정 처리 POST : 레포지토리에 update
+    @PostMapping("/{itemId}/edit")
+    public String edit(@PathVariable Long itemId, @ModelAttribute("item") Item item){
+        itemRepository.update(itemId, item);
+        return "redirect:/basic/items/{itemId}"; // 상세 화면으로 Redirect 하여 URL 변경.
+        // http status code 302 == redirect. 즉, 컨트롤러를 다시 호출하는 것.
+    }
 }
