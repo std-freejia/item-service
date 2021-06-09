@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -96,11 +97,23 @@ public class BasicItemController {
         return "basic/item";
     }
 
-    @PostMapping("/add")  //  PRG 패턴 적용! 새로고침 문제 해결.
+    // @PostMapping("/add")  //  PRG 패턴 적용! 새로고침 문제 해결.
     public String addItemV5(Item item){
         itemRepository.save(item);
         return "redirect:/basic/items/" + item.getId();
         // redirect -> HTTP 응답 헤더의 Location: http://localhost:8080/basic/items/3 (상세 화면 컨트롤러 호출)
+    }
+
+    @PostMapping("/add")  // RedirectAttributes
+    public String addItemV6(Item item, RedirectAttributes redirectAttributes){
+        Item savedItem = itemRepository.save(item);
+        // redirect와 관련된 속성 넣기 -> URL 에 pathVariable 바인딩 가능  {itemId}에 치환된다.
+        redirectAttributes.addAttribute("itemId", savedItem.getId());
+        // 저장이 '완료'되었다는 뜻으로 사용.
+        redirectAttributes.addAttribute("status", true);
+
+        return "redirect:/basic/items/{itemId}"; // URL에 못들어 간 나머지 속성들은 (status는) 쿼리 파라미터로 들어간다.
+        // http://localhost:8080/basic/items/3?status=true
     }
 
     // 수정 화면 GET : 수정 화면에 기존 정보만 뿌려준다.
